@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CAPE disposable Windows guest: execution, persistence, network and file-write telemetry. -->
+<Sysmon schemaversion="4.90">
+  <HashAlgorithms>sha256,imphash</HashAlgorithms>
+  <EventFiltering>
+    <RuleGroup name="Execution" groupRelation="or">
+      <ProcessCreate onmatch="include" />
+      <ProcessTerminate onmatch="include" />
+      <DriverLoad onmatch="include" />
+      <ImageLoad onmatch="include" />
+    </RuleGroup>
+    <RuleGroup name="Injection" groupRelation="or">
+      <ProcessAccess onmatch="include" />
+      <CreateRemoteThread onmatch="include" />
+    </RuleGroup>
+    <RuleGroup name="Network" groupRelation="or">
+      <NetworkConnect onmatch="include" />
+      <DnsQuery onmatch="include" />
+    </RuleGroup>
+    <RuleGroup name="Persistence and files" groupRelation="or">
+      <RegistryEvent onmatch="include" />
+      <FileCreate onmatch="include" />
+      <FileCreateStreamHash onmatch="include" />
+      <FileDeleteDetected onmatch="include" />
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>

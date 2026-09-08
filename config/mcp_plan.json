@@ -1,0 +1,12 @@
+[
+  {
+    "tool": "analyze_binary",
+    "arguments": {
+      "sample_path": "{sample}",
+      "max_functions": 1200,
+      "max_decompile": 120,
+      "timeout_seconds": 900,
+      "force": false
+    }
+  }
+]

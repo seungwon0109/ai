@@ -1,0 +1,2 @@
+@echo off
+powershell.exe -NoProfile -Command "$l=Get-NetTCPConnection -State Listen -LocalPort 8000 | Select-Object -First 1; $p=Get-Process -Id $l.OwningProcess; $t=Get-ScheduledTask -TaskName 'CAPE Agent'; Write-Output SESSION_ID=$($p.SessionId); Write-Output RUN_AS=$($t.Principal.UserId); Write-Output LOGON_TYPE=$($t.Principal.LogonType); Write-Output LISTENER=$($l.LocalAddress):$($l.LocalPort)"

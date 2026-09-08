@@ -1,0 +1,4 @@
+TOKYOCORE RECOVERY CANARY
+This file contains no private data.
+Expected marker: 386fbb57-recovery-proof-v1
+The recovered file must match this content byte-for-byte.

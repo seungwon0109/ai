@@ -1,0 +1,7 @@
+{
+  "version": "9.4.0",
+  "source": "https://github.com/mandiant/capa/releases/download/v9.4.0/capa-v9.4.0-windows.zip",
+  "archive_sha256": "670ab1a58b81f59cb57533bf4021ac1e7033fbe9b5d5cc180f796976081e3bb5",
+  "executable_sha256": "356db59a7f0d22b00ee63bda6ebb5b05149530eec5dd84101caef6d6bae94dfd",
+  "installed_path": "tools/capa/capa.exe"
+}

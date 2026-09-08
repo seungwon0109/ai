@@ -1,0 +1,53 @@
+diff --git a/lib/cuckoo/core/resultserver.py b/lib/cuckoo/core/resultserver.py
+--- a/lib/cuckoo/core/resultserver.py
++++ b/lib/cuckoo/core/resultserver.py
+@@ -518,6 +518,19 @@ class GeventResultServerWorker(gevent.server.StreamServer):
+             self.tasks[ipaddr] = task_id
+             log.debug("Task #%s: The associated machine IP is %s", task_id, ipaddr)
+ 
++    def add_task_alias(self, task_id, ipaddr):
++        """Associate a trusted proxy source address with an active task."""
++        with self.task_mgmt_lock:
++            self.tasks[ipaddr] = task_id
++            log.debug("Task #%s: Added ResultServer source alias %s", task_id, ipaddr)
++
++    def del_task_alias(self, task_id, ipaddr):
++        """Remove a proxy source alias without cancelling task handlers."""
++        with self.task_mgmt_lock:
++            if self.tasks.get(ipaddr) == task_id:
++                self.tasks.pop(ipaddr, None)
++                log.debug("Task #%s: Removed ResultServer source alias %s", task_id, ipaddr)
++
+     def del_task(self, task_id, ipaddr):
+         """Delete ResultServer state and abort pending RequestHandlers. Since
+         we're about to shutdown the VM, any remaining open connections can
+@@ -779,6 +792,7 @@ class ResultServer(metaclass=Singleton):
+             return
+ 
+         self.multiworker = cfg.resultserver.get("multiworker", False)
++        self.proxy_source_ip = cfg.resultserver.get("proxy_source_ip")
+         self.ip = cfg.resultserver.ip
+ 
+         if self.multiworker:
+@@ -835,14 +849,21 @@ class ResultServer(metaclass=Singleton):
+         if self.multiworker:
+             self._add_task_multiworker(task, machine)
+         else:
+             self.instance.add_task(task.id, machine.ip)
++            if self.proxy_source_ip and self.proxy_source_ip != machine.ip:
++                self.instance.add_task_alias(task.id, self.proxy_source_ip)
+ 
+     def del_task(self, task, machine):
+         """Delete running task and cancel existing handlers."""
+         if self.multiworker:
+             self._del_task_multiworker(task, machine)
+         else:
++            if self.proxy_source_ip and self.proxy_source_ip != machine.ip:
++                self.instance.del_task_alias(task.id, self.proxy_source_ip)
+             self.instance.del_task(task.id, machine.ip)
++
++        # A single proxy source address can identify only one active VM.
++        # This compatibility mode is intended for a one-machine portproxy lab.
+ 
+     def _add_task_multiworker(self, task, machine):
+         """Start or reuse a worker process for this VM and register the task."""

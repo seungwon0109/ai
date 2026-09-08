@@ -1,0 +1,8 @@
+{
+  "python": "3.11.9",
+  "ghidra": "12.1.2 PUBLIC 20260605",
+  "java": "Microsoft OpenJDK 21.0.12 LTS",
+  "cape_git_commit": "e451de4",
+  "ollama_default_model": "malware-qwen:9b",
+  "python_lock": "requirements.lock"
+}
